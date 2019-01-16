@@ -97,6 +97,9 @@ class EAPI
 			if(!isset($response['records'][0]['sessionKey'])) {
 				unset($_SESSION['EAPISessionKey'][$this->clientCode][$this->username]);
 				unset($_SESSION['EAPISessionKeyExpires'][$this->clientCode][$this->username]);
+
+				// Log response
+                print_r($response);
 				
 				throw new Exception('Verify user failure', self::VERIFY_USER_FAILURE);
 			}
