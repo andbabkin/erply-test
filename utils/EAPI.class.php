@@ -22,7 +22,7 @@ class EAPI
 	}
 
     /**
-     * @param $request
+     * @param string|bool $request
      * @param array $parameters
      * @return mixed
      * @throws Exception
@@ -35,7 +35,9 @@ class EAPI
 		}
 	
 		//add extra params
-		$parameters['request'] = $request;
+        if($request){
+            $parameters['request'] = $request;
+        }
 		$parameters['clientCode'] = $this->clientCode;
 		$parameters['version'] = '1.0';
 		$parameters['sendContentType'] = 1;
