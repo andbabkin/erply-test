@@ -13,14 +13,16 @@ final class DBConnection
     {
         if(self::$conn == null){
             $host = 'localhost';
-            $port = '3311'; // default 3306
             $db = 'erply';
             $user = 'service';
             $pass = 'password';
 
             try
             {
-                self::$conn = new \PDO("mysql:host=$host;port=$port;dbname=$db;charset=utf8;", $user, $pass);
+                $options = [
+                    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+                ];
+                self::$conn = new \PDO("mysql:host=$host;dbname=$db;charset=utf8;", $user, $pass, $options);
             }
             catch (\PDOException $e)
             {
