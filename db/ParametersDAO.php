@@ -15,7 +15,7 @@ class ParametersDAO
     {
         $sql = "SELECT `{$this->value}` FROM `{$this->table}` WHERE `{$this->name}` = ?";
         $stmt = DBConnection::executeStatement($sql, [$name]);
-        $param = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $param = $stmt->fetch();
         if($param === false){
             if($create_if_not_exist){
                 $this->create($name);
