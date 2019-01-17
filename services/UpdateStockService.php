@@ -42,9 +42,6 @@ class UpdateStockService
 
         // Update timestamp
         $this->parametersDAO->set('changed_since', $new_changed_since);
-
-        // Logging
-        //print_r($processed_data);
     }
 
     /**
@@ -91,7 +88,7 @@ class UpdateStockService
 
     /**
      * Connect received data with warehouse ids.
-     * @param $data
+     * @param array $data
      * @return array - [ [warehouseID] => [ ['productID' => integer,'amountInStock' => decimal(,6)], ... ], ... ]
      */
     private function processData($data)
@@ -105,19 +102,49 @@ class UpdateStockService
         return $processed;
     }
 
+    /**
+     * @param array $data - [ [warehouseID] => [ ['productID' => integer,'amountInStock' => decimal(,6)], ... ], ... ]
+     */
     private function insertData($data)
     {
         // Delete all stock records
+        $this->stockDAO->deleteAll();
 
         // Insert all received data
+        $inserted = $this->stockDAO->insertFromExternalSource($data);
+
+        // Logging
+        echo "Inserted $inserted row(s)";
     }
 
+    /**
+     * @param array $data - [ [warehouseID] => [ ['productID' => integer,'amountInStock' => decimal(,6)], ... ], ... ]
+     */
     private function updateData($data)
     {
         // Get all local records
+        // [ [stock] => [ id => qty, ... ], ... ]
+        $local = $this->stockDAO->getAll();
 
         // For each record from external source
         // do INSERT if product doesn't exist locally
         // do UPDATE amount if it exists
+        $inserted = 0;
+        $updated = 0;
+        foreach ($data as $stock => $items){
+            foreach ($items as $record){
+                $p = (int)$record['productID'];
+                $a = $record['amountInStock'] + 0; // make number if type is string
+                if(array_key_exists($p, $local[$stock])){
+                    $updated += $this->stockDAO->update($p, $a, $stock);
+                } else {
+                    $inserted += $this->stockDAO->insert($p, $a, $stock);
+                }
+            }
+        }
+
+        // Logging
+        echo "Inserted $inserted row(s)";
+        echo "Updated $updated row(s)";
     }
 }

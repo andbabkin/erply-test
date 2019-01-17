@@ -67,14 +67,14 @@ class StockDAO
     public function insert($product_id, $amount, $stock_id)
     {
         $sql = "INSERT INTO `{$this->table}` (`{$this->id}`,`{$this->qty}`,`{$this->stock}`) VALUES"
-            .'('.(int)$product_id.','.($amount+0).",$stock_id)";
+            ."($product_id,$amount,$stock_id)";
         return DBConnection::getConn()->exec($sql);
     }
 
     public function update($product_id, $amount, $stock_id)
     {
-        $sql = "UPDATE `{$this->table}` SET `{$this->qty}`=".($amount+0)
-            ." WHERE `{$this->id}`=".(int)$product_id." AND `{$this->stock}`=$stock_id";
+        $sql = "UPDATE `{$this->table}` SET `{$this->qty}`=$amount "
+            ."WHERE `{$this->id}`=$product_id AND `{$this->stock}`=$stock_id";
         return DBConnection::getConn()->exec($sql);
     }
 }
