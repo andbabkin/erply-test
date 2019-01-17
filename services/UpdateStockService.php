@@ -27,7 +27,18 @@ class UpdateStockService
 
         // Get data from api
         $received_data = $this->getDataFromApi();
+        $new_changed_since = $received_data['status']['requestUnixTime'];
         $processed_data = $this->processData($received_data);
+
+        // Save data to DB
+        if(empty($this->changed_since)){
+            $this->insertData($processed_data);
+        } else {
+            $this->updateData($processed_data);
+        }
+
+        // Update timestamp
+        $this->parametersDAO->set('changed_since', $new_changed_since);
 
         // Logging
         //print_r($processed_data);
@@ -89,5 +100,21 @@ class UpdateStockService
             $i++;
         }
         return $processed;
+    }
+
+    private function insertData($data)
+    {
+        // Delete all stock records
+
+        // Insert all received data
+    }
+
+    private function updateData($data)
+    {
+        // Get all local records
+
+        // For each record from external source
+        // do INSERT if product doesn't exist locally
+        // do UPDATE amount if it exists
     }
 }
