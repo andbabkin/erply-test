@@ -1,9 +1,4 @@
 <?php
-/**
- * Author: Andrei Babkin <andrei@malachiteden.com>
- * Date: 17.01.2019
- * Time: 8:37
- */
 
 namespace Services;
 
