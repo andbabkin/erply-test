@@ -9,6 +9,7 @@ class UpdateStockService
 {
     private $eapi;
     private $parametersDAO;
+    private $changed_since;
 
     public function __construct(EAPI $eapi, ParametersDAO $parametersDAO)
     {
@@ -21,14 +22,12 @@ class UpdateStockService
      */
     public function run()
     {
-        /*$received_data = $this->getDataFromApi();
-        $processed_data = $this->processData($received_data);*/
-        $val = $this->parametersDAO->get('test');
-        if(empty($val)){
-            echo 'Value is empty';
-        } else {
-            echo 'Value='.$val;
-        }
+        // Get the timestamp of last update
+        $this->changed_since = $this->parametersDAO->get('changed_since');
+
+        // Get data from api
+        $received_data = $this->getDataFromApi();
+        $processed_data = $this->processData($received_data);
 
         // Logging
         //print_r($processed_data);
@@ -56,7 +55,11 @@ class UpdateStockService
     {
         $requests = [];
         foreach ($this->getWarehouseIds() as $wid){
-            $requests[] = ['requestName' => 'getProductStock', 'warehouseID' => $wid];
+            $request = ['requestName' => 'getProductStock', 'warehouseID' => $wid];
+            if(!empty($this->changed_since)){
+                $request['changedSince'] = $this->changed_since;
+            }
+            $requests[] = $request;
         }
         return $requests;
     }
