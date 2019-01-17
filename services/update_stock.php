@@ -20,7 +20,8 @@ $api->url = \Services\Config::getApiUrl();
 // Execute service
 $service = new \Services\UpdateStockService(
     $api,
-    new \DB\ParametersDAO()
+    new \DB\ParametersDAO(),
+    new \DB\StockDAO()
 );
 try{
     $service->run();

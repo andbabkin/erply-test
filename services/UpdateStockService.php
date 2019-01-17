@@ -3,18 +3,21 @@
 namespace Services;
 
 use DB\ParametersDAO;
+use DB\StockDAO;
 use Utils\EAPI;
 
 class UpdateStockService
 {
     private $eapi;
     private $parametersDAO;
+    private $stockDAO;
     private $changed_since;
 
-    public function __construct(EAPI $eapi, ParametersDAO $parametersDAO)
+    public function __construct(EAPI $eapi, ParametersDAO $parametersDAO, StockDAO $stockDAO)
     {
         $this->eapi = $eapi;
         $this->parametersDAO = $parametersDAO;
+        $this->stockDAO = $stockDAO;
     }
 
     /**
@@ -89,7 +92,7 @@ class UpdateStockService
     /**
      * Connect received data with warehouse ids.
      * @param $data
-     * @return array - [ [warehouse_id] => [ ['productID','amountInStock'], ... ], ... ];
+     * @return array - [ [warehouseID] => [ ['productID' => integer,'amountInStock' => decimal(,6)], ... ], ... ]
      */
     private function processData($data)
     {
