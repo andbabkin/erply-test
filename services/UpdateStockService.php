@@ -2,13 +2,18 @@
 
 namespace Services;
 
+use DB\ParametersDAO;
+use Utils\EAPI;
+
 class UpdateStockService
 {
     private $eapi;
+    private $parametersDAO;
 
-    public function __construct(\EAPI $eapi)
+    public function __construct(EAPI $eapi, ParametersDAO $parametersDAO)
     {
         $this->eapi = $eapi;
+        $this->parametersDAO = $parametersDAO;
     }
 
     /**
@@ -16,11 +21,17 @@ class UpdateStockService
      */
     public function run()
     {
-        $received_data = $this->getDataFromApi();
-        $processed_data = $this->processData($received_data);
+        /*$received_data = $this->getDataFromApi();
+        $processed_data = $this->processData($received_data);*/
+        $val = $this->parametersDAO->get('test');
+        if(empty($val)){
+            echo 'Value is empty';
+        } else {
+            echo 'Value='.$val;
+        }
 
         // Logging
-        print_r($processed_data);
+        //print_r($processed_data);
     }
 
     /**

@@ -1,4 +1,7 @@
 <?php
+
+namespace Utils;
+
 class EAPI
 {
 	const VERIFY_USER_FAILURE = 2001;

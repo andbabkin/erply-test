@@ -9,7 +9,7 @@ require_once "dependencies.php";
 require_once "UpdateStockService.php";
 
 // Initialise class
-$api = new EAPI();
+$api = new \Utils\EAPI();
 
 // Configuration settings
 $api->clientCode = \Services\Config::CLIENT_CODE;
@@ -18,7 +18,10 @@ $api->password = \Services\Config::PASSWORD;
 $api->url = \Services\Config::getApiUrl();
 
 // Execute service
-$service = new \Services\UpdateStockService($api);
+$service = new \Services\UpdateStockService(
+    $api,
+    new \DB\ParametersDAO()
+);
 try{
     $service->run();
 } catch(\Exception $e) {

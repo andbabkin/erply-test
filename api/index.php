@@ -4,10 +4,6 @@
  * input parameters. Sends positive response if all items can be
  * issued from stock, and negative response if at least one item
  * doesn't have enough quantity in the warehouse.
- *
- * Author: Andrei Babkin <andrei@malachiteden.com>
- * Date: 16.01.2019
- * Time: 10:18
  */
 
 // Headers
