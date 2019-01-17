@@ -33,6 +33,7 @@ final class DBConnection
     }
 
     /**
+     * Executes query with parameters
      * @param string $sql
      * @param array $params
      * @return \PDOStatement
