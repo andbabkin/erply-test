@@ -114,7 +114,9 @@ class UpdateStockService
         $inserted = $this->stockDAO->insertFromExternalSource($data);
 
         // Logging
-        echo "Inserted $inserted row(s)";
+        if($inserted !== false){
+            echo "Inserted $inserted row(s)\n";
+        }
     }
 
     /**
@@ -136,15 +138,17 @@ class UpdateStockService
                 $p = (int)$record['productID'];
                 $a = $record['amountInStock'] + 0; // make number if type is string
                 if(array_key_exists($p, $local[$stock])){
-                    $updated += $this->stockDAO->update($p, $a, $stock);
+                    $rows = $this->stockDAO->update($p, $a, $stock);
+                    if($rows !== false) $updated++;
                 } else {
-                    $inserted += $this->stockDAO->insert($p, $a, $stock);
+                    $rows = $this->stockDAO->insert($p, $a, $stock);
+                    if($rows !== false) $inserted++;
                 }
             }
         }
 
         // Logging
-        echo "Inserted $inserted row(s)";
-        echo "Updated $updated row(s)";
+        echo "Inserted $inserted row(s)\n";
+        echo "Updated $updated row(s)\n";
     }
 }

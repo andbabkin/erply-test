@@ -48,13 +48,13 @@ class StockDAO
     public function insertFromExternalSource($data)
     {
         $first = true;
-        $sql = "INSERT INTO `{$this->table}` (`{$this->id}`,`{$this->qty}`,`{$this->stock}`) VALUES";
+        $sql = "INSERT INTO `{$this->table}` (`{$this->id}`,`{$this->qty}`,`{$this->stock}`) VALUES ";
         foreach ($data as $stock => $items){
             foreach ($items as $record){
                 if($first){
                     $first = false;
                 } else {
-                    $sql .= ',';
+                    $sql .= ', ';
                 }
                 $p = (int)$record['productID'];
                 $a = $record['amountInStock'] + 0; // make number if type is string
@@ -66,7 +66,7 @@ class StockDAO
 
     public function insert($product_id, $amount, $stock_id)
     {
-        $sql = "INSERT INTO `{$this->table}` (`{$this->id}`,`{$this->qty}`,`{$this->stock}`) VALUES"
+        $sql = "INSERT INTO `{$this->table}` (`{$this->id}`,`{$this->qty}`,`{$this->stock}`) VALUES "
             ."($product_id,$amount,$stock_id)";
         return DBConnection::getConn()->exec($sql);
     }

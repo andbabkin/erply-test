@@ -28,7 +28,7 @@ final class DBConnection
             catch (\PDOException $e)
             {
                 // Logging
-                echo "Error!: " . $e->getMessage();
+                echo "Error!: " . $e->getMessage(). "\n";
             }
 
         }

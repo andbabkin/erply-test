@@ -27,5 +27,5 @@ try{
     $service->run();
 } catch(\Exception $e) {
     // Log error
-    echo $e->getMessage();
+    echo $e->getMessage().'\n';
 }
