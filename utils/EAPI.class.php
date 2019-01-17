@@ -28,13 +28,13 @@ class EAPI
      * @param string|bool $request
      * @param array $parameters
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
 	public function sendRequest($request, $parameters = array())
 	{
 		//validate that all required parameters are set
 		if(!$this->url OR !$this->clientCode OR !$this->username OR !$this->password){
-			throw new Exception('Missing parameters', self::MISSING_PARAMETERS);
+			throw new \Exception('Missing parameters', self::MISSING_PARAMETERS);
 		}
 	
 		//add extra params
@@ -75,18 +75,18 @@ class EAPI
 		$error = curl_error($handle);
 		$errorNumber = curl_errno($handle);
 		curl_close($handle);
-		if($error) throw new Exception('CURL error: '.$response.':'.$error.': '.$errorNumber, self::CURL_ERROR);
+		if($error) throw new \Exception('CURL error: '.$response.':'.$error.': '.$errorNumber, self::CURL_ERROR);
 		return $response;
 	}
 
     /**
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
 	protected function getSessionKey()
 	{
 		//test for session
-		if(!isset($_SESSION)) throw new Exception('PHP session not started', self::PHP_SESSION_NOT_STARTED);
+		if(!isset($_SESSION)) throw new \Exception('PHP session not started', self::PHP_SESSION_NOT_STARTED);
 		
 		//if no session key or key expired, then obtain it
 		if(
@@ -106,7 +106,7 @@ class EAPI
 				// Log response
                 print_r($response);
 				
-				throw new Exception('Verify user failure', self::VERIFY_USER_FAILURE);
+				throw new \Exception('Verify user failure', self::VERIFY_USER_FAILURE);
 			}
 			
 			//cache the key in PHP session
