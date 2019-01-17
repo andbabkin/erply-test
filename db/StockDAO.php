@@ -26,7 +26,7 @@ class StockDAO
             if(!array_key_exists($row[$this->stock], $data)){
                 $data[$this->stock] = [];
             }
-            $data[ $this->stock ][ $row[$this->id] ] = $row[$this->qty];
+            $data[ $row[$this->stock] ][ $row[$this->id] ] = $row[$this->qty];
         }
 
         return $data;
