@@ -66,15 +66,16 @@ class StockDAO
 
     public function insert($product_id, $amount, $stock_id)
     {
-        $sql = "INSERT INTO `{$this->table}` (`{$this->id}`,`{$this->qty}`,`{$this->stock}`) VALUES "
-            ."($product_id,$amount,$stock_id)";
-        return DBConnection::getConn()->exec($sql);
+        $sql = "INSERT INTO `{$this->table}` (`{$this->id}`,`{$this->qty}`,`{$this->stock}`) VALUES (?,?,?)";
+        $stmt = DBConnection::executeStatement($sql, [$product_id, $amount, $stock_id]);
+        return $stmt->rowCount();
     }
 
     public function update($product_id, $amount, $stock_id)
     {
-        $sql = "UPDATE `{$this->table}` SET `{$this->qty}`=$amount "
-            ."WHERE `{$this->id}`=$product_id AND `{$this->stock}`=$stock_id";
-        return DBConnection::getConn()->exec($sql);
+        $sql = "UPDATE `{$this->table}` SET `{$this->qty}`=? "
+            ."WHERE `{$this->id}`=? AND `{$this->stock}`=?";
+        $stmt = DBConnection::executeStatement($sql, [$amount, $product_id, $stock_id]);
+        return $stmt->rowCount();
     }
 }

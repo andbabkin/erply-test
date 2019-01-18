@@ -138,11 +138,9 @@ class UpdateStockService
                 $p = (int)$record['productID'];
                 $a = $record['amountInStock'] + 0; // make number if type is string
                 if(array_key_exists($p, $local[$stock])){
-                    $rows = $this->stockDAO->update($p, $a, $stock);
-                    if($rows !== false) $updated++;
+                    $updated += $this->stockDAO->update($p, $a, $stock);
                 } else {
-                    $rows = $this->stockDAO->insert($p, $a, $stock);
-                    if($rows !== false) $inserted++;
+                    $inserted += $this->stockDAO->insert($p, $a, $stock);
                 }
             }
         }
