@@ -8,14 +8,11 @@
     <script>
       var processingStockAmountsRequest = false;
 
-      var doJob = function(){
-        var dtext = '';
-
-        /*Warehouse*/
+      var checkStockAmounts = function(){
+        // Warehouse
         var wid = $("#invoice_warehouse_id").val();
-        dtext += wid + ' ';
 
-        /*Items*/
+        // Items
         var ids = [];
         var items = [];
         $("tr[data-reference_id]").each(function(index,el){
@@ -25,19 +22,17 @@
           items.push({prid:p, amount:a});
         });
 
-        // Get data from api
+        // Compare form amounts with stock amounts received by api
         $.ajax({
           url: 'http://localhost:4570/api.php',
           data: { request:'getStockAmounts', warehouseID: wid, productIDs:ids.toString() },
           success: function(data, status, xhr){
-            // Handle data
             var inStock = true;
             var r = data.records;
             for(var i=0; i<items.length; ++i){
               var found = null;
               for(var p=0; p<r.length; ++p){
-                console.log(JSON.stringify(r[p]));
-                if(parseInt(r[p].productID) === parseInt(items[i].prid)){
+                if(r[p].productID == items[i].prid){
                   found = r[p];
                   break;
                 }
@@ -69,16 +64,12 @@
           },
           dataType: 'json'
         });
-
-        // Update message
-        dtext += ids.toString() + '<br>' + JSON.stringify(items);
-        $("#demo").html(dtext);
       };
 
       var btnClicked = function(){
         if(!processingStockAmountsRequest){
           processingStockAmountsRequest = true;
-          doJob();
+          checkStockAmounts();
         }
       };
     </script>
