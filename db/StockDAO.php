@@ -32,6 +32,22 @@ class StockDAO
         return $data;
     }
 
+    public function getStockAmountsByIDs($stock_id, $product_ids)
+    {
+        $plcs = implode(',', array_fill(0, count($product_ids), '?'));
+        $sql = "SELECT `{$this->id}`, `{$this->qty}` FROM `{$this->table}` "
+            ."WHERE `{$this->stock}`=? AND `{$this->id}` IN ($plcs)";
+        $stmt = DBConnection::executeStatement($sql, array_merge([$stock_id], $product_ids));
+        $data = [];
+        while($row = $stmt->fetch()){
+            $data[] = [
+                'productID' => $row[$this->id],
+                'amountInStock' => $row[$this->qty]
+            ];
+        }
+        return $data;
+    }
+
     /**
      * @return int number of rows deleted
      */
