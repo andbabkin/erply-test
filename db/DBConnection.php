@@ -12,7 +12,7 @@ final class DBConnection
     static public function getConn()
     {
         if(self::$conn == null){
-            $host = 'localhost';
+            $host = '127.0.0.1';
             $db = 'erply';
             $user = 'service';
             $pass = 'password';
