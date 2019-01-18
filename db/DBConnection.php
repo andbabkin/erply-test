@@ -29,6 +29,7 @@ final class DBConnection
             {
                 // Logging
                 echo "Error!: " . $e->getMessage(). "\n";
+                exit;
             }
 
         }
