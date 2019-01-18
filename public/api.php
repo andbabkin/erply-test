@@ -27,7 +27,7 @@ $response = [
 // Get input: request('getStockAmounts'), warehouseID(int), productIDs(string:integers separated by comma)
 //
 // Check request name
-if(!isset($_POST['request']) || $_POST['request'] !== 'getStockAmounts'){
+if(!isset($_GET['request']) || $_GET['request'] !== 'getStockAmounts'){
     http_response_code(400);
     $response['message'] = "Not supported request";
     echo json_encode($response);
@@ -35,22 +35,22 @@ if(!isset($_POST['request']) || $_POST['request'] !== 'getStockAmounts'){
 }
 
 // Process warehouseID
-if(!isset($_POST['warehouseID']) || !is_numeric($_POST['warehouseID'])){
+if(!isset($_GET['warehouseID']) || !is_numeric($_GET['warehouseID'])){
     http_response_code(400);
     $response['message'] = "No valid warehouse code provided";
     echo json_encode($response);
     exit;
 }
-$warehouseID = (int)$_POST['warehouseID'];
+$warehouseID = (int)$_GET['warehouseID'];
 
 // Process productIDs
-if(!isset($_POST['productIDs'])){
+if(!isset($_GET['productIDs'])){
     http_response_code(400);
     $response['message'] = "Product IDs should be provided";
     echo json_encode($response);
     exit;
 }
-$productIDs_raw = explode(',', $_POST['productIDs']);
+$productIDs_raw = explode(',', $_GET['productIDs']);
 $productIDs = [];
 foreach ($productIDs_raw as $id_raw){
     if(is_numeric($id_raw) && (int)$id_raw > 0){
