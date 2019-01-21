@@ -30,6 +30,9 @@ class UpdateStockService
 
         // Get data from api
         $received_data = $this->getDataFromApi();
+        if($received_data['status']['responseStatus'] === 'error'){
+            throw new \Exception('Request Error: '.$received_data['status']['errorCode']);
+        }
         $new_changed_since = $received_data['status']['requestUnixTime'];
         $processed_data = $this->processData($received_data);
 
@@ -96,7 +99,13 @@ class UpdateStockService
         $processed = [];
         $i=0;
         foreach ($this->getWarehouseIds() as $wid){
-            $processed[$wid] = $data['requests'][$i]['records'];
+            if($data['requests'][$i]['status']['responseStatus'] !== 'error'){
+                $processed[$wid] = $data['requests'][$i]['records'];
+            } else {
+                // Logging
+                echo "Sub-request Error: ".$data['requests'][$i]['status']['errorCode']."\n";
+            }
+
             $i++;
         }
         return $processed;
