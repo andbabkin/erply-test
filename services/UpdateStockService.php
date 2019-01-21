@@ -33,6 +33,7 @@ class UpdateStockService
         if($received_data['status']['responseStatus'] === 'error'){
             throw new \Exception('Request Error: '.$received_data['status']['errorCode']);
         }
+
         $new_changed_since = $received_data['status']['requestUnixTime'];
         $processed_data = $this->processData($received_data);
 
@@ -55,7 +56,8 @@ class UpdateStockService
     {
         // Input parameters
         $params = [
-            'requests' => json_encode($this->prepareRequests())
+            'requests' => json_encode($this->prepareRequests()),
+            'responseType' => 'CSV'
         ];
 
         $result = $this->eapi->sendRequest(false, $params);
@@ -90,25 +92,52 @@ class UpdateStockService
     }
 
     /**
-     * Connect received data with warehouse ids.
-     * @param array $data
+     * Get data in CSV format and convert it into array.
+     * @param array $received_data
      * @return array - [ [warehouseID] => [ ['productID' => integer,'amountInStock' => decimal(,6)], ... ], ... ]
      */
-    private function processData($data)
+    private function processData($received_data)
     {
-        $processed = [];
-        $i=0;
-        foreach ($this->getWarehouseIds() as $wid){
-            if($data['requests'][$i]['status']['responseStatus'] !== 'error'){
-                $processed[$wid] = $data['requests'][$i]['records'];
-            } else {
-                // Logging
-                echo "Sub-request Error: ".$data['requests'][$i]['status']['errorCode']."\n";
+        $stocks = [];
+        if(isset($received_data['requests'])){
+            $i=0;
+            foreach ($this->getWarehouseIds() as $wid){
+                if(isset($received_data['requests'][$i]['records'][0]['reportLink'])){
+                    // URL address of CSV file with stock data
+                    $link = $received_data['requests'][$i]['records'][0]['reportLink'];
+                    // Get content of the CSV file as string
+                    $content = file_get_contents($link);
+                    if($content !== false){
+                        // Split string to rows
+                        $content_data = explode("\n", $content);
+                        // Prepare array for products
+                        $stocks[$wid] = [];
+                        // Get product IDs and stock amounts from the rows
+                        foreach ($content_data as $row){
+                            $row_data = explode(',', $row);
+                            if(count($row_data) > 1) {
+                                $prid = trim($row_data[0], " \t\n\r\0\x0B\"");
+                                $amnt = trim($row_data[1], " \t\n\r\0\x0B\"");
+                                if(is_numeric($prid) && is_numeric($amnt)){
+                                    $stocks[$wid][] = [
+                                        'productID' => (int)$prid,
+                                        'amountInStock' => (float)$amnt
+                                    ];
+                                }
+                            }
+                        }
+                    } else {
+                        // Logging
+                        echo "Failed to get CSV content from $link\n";
+                    }
+                } else if(isset($received_data['requests'][$i]['status']['errorCode'])){
+                    // Logging
+                    echo "Request error: ".$received_data['requests'][$i]['status']['errorCode']."\n";
+                }
+                $i++;
             }
-
-            $i++;
         }
-        return $processed;
+        return $stocks;
     }
 
     /**
