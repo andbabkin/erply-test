@@ -71,7 +71,7 @@ class UpdateStockService
     {
         $requests = [];
         foreach ($this->getWarehouseIds() as $wid){
-            $request = ['requestName' => 'getProductStock', 'warehouseID' => $wid];
+            $request = ['requestName' => 'getProductStock', 'warehouseID' => $wid, 'getAmountReserved' => 1];
             if(!empty($this->changed_since)){
                 $request['changedSince'] = $this->changed_since;
             }
@@ -115,13 +115,14 @@ class UpdateStockService
                         // Get product IDs and stock amounts from the rows
                         foreach ($content_data as $row){
                             $row_data = explode(',', $row);
-                            if(count($row_data) > 1) {
+                            if(count($row_data) > 2) {
                                 $prid = trim($row_data[0], " \t\n\r\0\x0B\"");
                                 $amnt = trim($row_data[1], " \t\n\r\0\x0B\"");
-                                if(is_numeric($prid) && is_numeric($amnt)){
+                                $rsrv = trim($row_data[2], " \t\n\r\0\x0B\"");
+                                if(is_numeric($prid) && is_numeric($amnt) && is_numeric($rsrv)){
                                     $stocks[$wid][] = [
                                         'productID' => (int)$prid,
-                                        'amountInStock' => (float)$amnt
+                                        'amountInStock' => round((float)$amnt - (float)$rsrv, 6)
                                     ];
                                 }
                             }
