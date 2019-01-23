@@ -129,11 +129,11 @@ class UpdateStockService
                         }
                     } else {
                         // Logging
-                        echo "Failed to get CSV content from $link\n";
+                        echo "Failed to get CSV content from $link".PHP_EOL;
                     }
                 } else if(isset($received_data['requests'][$i]['status']['errorCode'])){
                     // Logging
-                    echo "Request error: ".$received_data['requests'][$i]['status']['errorCode']."\n";
+                    echo "Request error: ".$received_data['requests'][$i]['status']['errorCode'].PHP_EOL;
                 }
                 $i++;
             }
@@ -154,7 +154,7 @@ class UpdateStockService
 
         // Logging
         if($inserted !== false){
-            echo "Inserted $inserted row(s)\n";
+            echo "Inserted $inserted row(s)".PHP_EOL;
         }
     }
 
@@ -185,7 +185,7 @@ class UpdateStockService
         }
 
         // Logging
-        echo "Inserted $inserted row(s)\n";
-        echo "Updated $updated row(s)\n";
+        echo "Inserted $inserted row(s)".PHP_EOL;
+        echo "Updated $updated row(s)".PHP_EOL;
     }
 }

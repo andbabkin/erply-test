@@ -26,5 +26,5 @@ try{
     $service->run();
 } catch(\Exception $e) {
     // Log error
-    echo $e->getMessage()."\n";
+    echo $e->getMessage().PHP_EOL;
 }
