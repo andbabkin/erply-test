@@ -1,10 +1,10 @@
 <?php
 
-namespace Services;
+namespace App\Services;
 
-use DB\ParametersDAO;
-use DB\StockDAO;
-use Utils\EAPI;
+use App\DB\ParametersDAO;
+use App\DB\StockDAO;
+use App\Utils\EAPI;
 
 class UpdateStockService
 {

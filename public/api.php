@@ -7,8 +7,7 @@
  */
 
 // Includes
-require_once __DIR__."/../db/DBConnection.php";
-require_once __DIR__."/../db/StockDAO.php";
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 // Headers
 header('Access-Control-Allow-Origin: *');
@@ -65,7 +64,7 @@ foreach ($productIDs_raw as $id_raw){
 
 
 // Prepare output
-$dao = new \DB\StockDAO();
+$dao = new \App\DB\StockDAO();
 try{
     $records = $dao->getStockAmountsByIDs($warehouseID, $productIDs);
 } catch (\Exception $e){
