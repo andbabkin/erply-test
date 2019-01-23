@@ -9,7 +9,7 @@ final class DBConnection
 
     private function __construct() {}
 
-    static public function getConn()
+    static public function getConn(): \PDO
     {
         if(self::$conn == null){
             $host = '127.0.0.1';
@@ -42,7 +42,7 @@ final class DBConnection
      * @param array $params
      * @return \PDOStatement
      */
-    static public function executeStatement($sql, $params)
+    static public function executeStatement(string $sql, array $params): \PDOStatement
     {
         $stmt = self::getConn()->prepare($sql);
         $stmt->execute($params);

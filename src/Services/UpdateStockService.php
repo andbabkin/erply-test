@@ -21,6 +21,7 @@ class UpdateStockService
     }
 
     /**
+     * @return void
      * @throws \Exception
      */
     public function run()
@@ -50,9 +51,10 @@ class UpdateStockService
 
     /**
      * Get stock amounts from ERPLY API.
+     * @return array
      * @throws \Exception
      */
-    private function getDataFromApi()
+    private function getDataFromApi(): array
     {
         // Input parameters
         $params = [
@@ -60,14 +62,19 @@ class UpdateStockService
             'responseType' => 'CSV'
         ];
 
-        $result = $this->eapi->sendRequest(false, $params);
-        return json_decode($result, true);
+        $result = $this->eapi->sendRequest('', $params);
+        $decoded = json_decode($result, true);
+        if(is_array($decoded)){
+            return $decoded;
+        } else {
+            throw new \Exception("Non-JSON object or empty response returned from API.");
+        }
     }
 
     /**
      * @return array
      */
-    private function prepareRequests()
+    private function prepareRequests(): array
     {
         $requests = [];
         foreach ($this->getWarehouseIds() as $wid){
@@ -86,7 +93,7 @@ class UpdateStockService
      * The warehouses data update must be performed by another service.
      * @return array
      */
-    private function getWarehouseIds()
+    private function getWarehouseIds(): array
     {
         return [1,2];
     }
@@ -96,7 +103,7 @@ class UpdateStockService
      * @param array $received_data
      * @return array - [ [warehouseID] => [ ['productID' => integer,'amountInStock' => decimal(,6)], ... ], ... ]
      */
-    private function processData($received_data)
+    private function processData(array $received_data): array
     {
         $stocks = [];
         if(isset($received_data['requests'])){
@@ -143,8 +150,9 @@ class UpdateStockService
 
     /**
      * @param array $data - [ [warehouseID] => [ ['productID' => integer,'amountInStock' => decimal(,6)], ... ], ... ]
+     * @return void
      */
-    private function insertData($data)
+    private function insertData(array $data)
     {
         // Delete all stock records
         $this->stockDAO->deleteAll();
@@ -160,8 +168,9 @@ class UpdateStockService
 
     /**
      * @param array $data - [ [warehouseID] => [ ['productID' => integer,'amountInStock' => decimal(,6)], ... ], ... ]
+     * @return void
      */
-    private function updateData($data)
+    private function updateData(array $data)
     {
         // Get all local records
         // [ [stock] => [ id => qty, ... ], ... ]

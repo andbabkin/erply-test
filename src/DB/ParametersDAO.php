@@ -11,7 +11,7 @@ class ParametersDAO
     private $name = 'name';
     private $value = 'value';
 
-    public function get($name, $create_if_not_exist = true)
+    public function get(string $name, bool $create_if_not_exist = true): ?string
     {
         $sql = "SELECT `{$this->value}` FROM `{$this->table}` WHERE `{$this->name}` = ?";
         $stmt = DBConnection::executeStatement($sql, [$name]);
@@ -26,13 +26,22 @@ class ParametersDAO
         }
     }
 
-    public function create($name)
+    /**
+     * @param string $name
+     * @return void
+     */
+    public function create(string $name)
     {
         $sql = "INSERT INTO {$this->table} (`{$this->name}`) VALUES (?)";
         DBConnection::executeStatement($sql, [$name]);
     }
 
-    public function set($name, $value)
+    /**
+     * @param string $name
+     * @param string $value
+     * @return void
+     */
+    public function set(string $name, string $value)
     {
         $sql = "UPDATE {$this->table} SET `{$this->value}` = ? WHERE `{$this->name}` = ?";
         DBConnection::executeStatement($sql, [$value, $name]);

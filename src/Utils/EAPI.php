@@ -15,7 +15,13 @@ class EAPI
 	public $password;
 	public $sslCACertPath;
 	
-	public function __construct($url = null, $clientCode = null, $username = null, $password = null, $sslCACertPath = null)
+	public function __construct(
+	    string $url = null,
+        string $clientCode = null,
+        string $username = null,
+        string $password = null,
+        string $sslCACertPath = null
+    )
 	{
 		$this->url = $url;
 		$this->clientCode = $clientCode;
@@ -25,12 +31,12 @@ class EAPI
 	}
 
     /**
-     * @param string|bool $request
+     * @param string $request
      * @param array $parameters
-     * @return mixed
+     * @return string
      * @throws \Exception
      */
-	public function sendRequest($request, $parameters = array())
+	public function sendRequest(string $request, array $parameters = []): string
 	{
 		//validate that all required parameters are set
 		if(!$this->url OR !$this->clientCode OR !$this->username OR !$this->password){
@@ -38,7 +44,7 @@ class EAPI
 		}
 	
 		//add extra params
-        if($request){
+        if(!empty($request)){
             $parameters['request'] = $request;
         }
 		$parameters['clientCode'] = $this->clientCode;
@@ -80,10 +86,10 @@ class EAPI
 	}
 
     /**
-     * @return mixed
+     * @return string
      * @throws \Exception
      */
-	protected function getSessionKey()
+	protected function getSessionKey(): string
 	{
 		//test for session
 		if(!isset($_SESSION)) throw new \Exception('PHP session not started', self::PHP_SESSION_NOT_STARTED);

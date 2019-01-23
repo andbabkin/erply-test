@@ -9,7 +9,8 @@ class Config
     const USERNAME = 'andrei@malachiteden.com';
     const PASSWORD = 'x7bzWBgZqx5cLZSx';
 
-    public static function getApiUrl(){
+    public static function getApiUrl(): string
+    {
         return "https://".self::CLIENT_CODE.".erply.com/api/";
     }
 }

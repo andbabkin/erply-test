@@ -15,7 +15,7 @@ class StockDAO
     /**
      * @return array - [ [stock] => [ id => qty, ... ], ... ]
      */
-    public function getAll()
+    public function getAll(): array
     {
         $data = [];
 
@@ -32,7 +32,12 @@ class StockDAO
         return $data;
     }
 
-    public function getStockAmountsByIDs($stock_id, $product_ids)
+    /**
+     * @param int $stock_id
+     * @param array $product_ids - array of integer values
+     * @return array - [ ['productID' => integer,'amountInStock' => decimal], ... ]
+     */
+    public function getStockAmountsByIDs(int $stock_id, array $product_ids): array
     {
         $plcs = implode(',', array_fill(0, count($product_ids), '?'));
         $sql = "SELECT `{$this->id}`, `{$this->qty}` FROM `{$this->table}` "
@@ -51,17 +56,17 @@ class StockDAO
     /**
      * @return int number of rows deleted
      */
-    public function deleteAll()
+    public function deleteAll(): int
     {
         $sql = "DELETE FROM `{$this->table}`";
         return DBConnection::getConn()->exec($sql);
     }
 
     /**
-     * @param array $data - [ [warehouseID] => [ ['productID' => integer,'amountInStock' => decimal(,6)], ... ], ... ]
+     * @param array $data - [ [warehouseID] => [ ['productID' => integer,'amountInStock' => decimal], ... ], ... ]
      * @return int number of added rows
      */
-    public function insertFromExternalSource($data)
+    public function insertFromExternalSource(array $data): int
     {
         $first = true;
         $sql = "INSERT INTO `{$this->table}` (`{$this->id}`,`{$this->qty}`,`{$this->stock}`) VALUES ";
@@ -80,14 +85,14 @@ class StockDAO
         return DBConnection::getConn()->exec($sql);
     }
 
-    public function insert($product_id, $amount, $stock_id)
+    public function insert(int $product_id, float $amount, int $stock_id): int
     {
         $sql = "INSERT INTO `{$this->table}` (`{$this->id}`,`{$this->qty}`,`{$this->stock}`) VALUES (?,?,?)";
         $stmt = DBConnection::executeStatement($sql, [$product_id, $amount, $stock_id]);
         return $stmt->rowCount();
     }
 
-    public function update($product_id, $amount, $stock_id)
+    public function update(int $product_id, float $amount, int $stock_id): int
     {
         $sql = "UPDATE `{$this->table}` SET `{$this->qty}`=? "
             ."WHERE `{$this->id}`=? AND `{$this->stock}`=?";
