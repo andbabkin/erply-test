@@ -5,9 +5,10 @@ namespace App\Services;
 
 class Config
 {
-    const CLIENT_CODE = 380579;
-    const USERNAME = 'andrei@malachiteden.com';
-    const PASSWORD = 'x7bzWBgZqx5cLZSx';
+    // The client code, user name, and password you have received from Erply.com
+    const CLIENT_CODE = 0;
+    const USERNAME = 'your_email@your_host.com';
+    const PASSWORD = 'secret_word';
 
     public static function getApiUrl(): string
     {
