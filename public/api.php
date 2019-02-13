@@ -1,9 +1,8 @@
 <?php
 /**
- * API request. Takes warehouse Id and collection of item amounts as
- * input parameters. Sends positive response if all items can be
- * issued from stock, and negative response if at least one item
- * doesn't have enough quantity in the warehouse.
+ * API request. Takes warehouse ID and collection of item IDs as
+ * input parameters. Sends an array of objects with item amounts
+ * in response.
  */
 
 // Includes
